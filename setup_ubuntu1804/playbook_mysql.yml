@@ -101,6 +101,12 @@
         login_unix_socket: /var/run/mysqld/mysqld.sock
       tags: [ mysql, mysql-root ]
 
+    - name: Set up mysqld.cnf
+      template:
+        src: "files/mysqld.cnf"
+        dest: "/etc/mysql/mysql.conf.d/mysqld.cnf"
+      tags: [ mysqldconf ]
+
     - name: Remove all anonymous user accounts
       mysql_user:
         name: ''
@@ -136,3 +142,7 @@
         login_user: root
         login_password: "{{ mysql_root_password }}"
       tags: [ mysqlcreateuser ]
+
+      # Reboot VM
+    - name: Reboot VM to apply mysql config file
+      reboot:
